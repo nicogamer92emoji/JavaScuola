@@ -30,7 +30,4 @@ public class JFrame1 extends JFrame{
     public int getAltezza() {
         return altezza;
     }
-
-    
-    
 }
