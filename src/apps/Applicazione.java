@@ -1,4 +1,4 @@
-package Appl;
+package apps;
 
 import java.util.ArrayList;
 import javax.swing.*;
@@ -37,7 +37,7 @@ public class Applicazione {
         JButton signIn = new JButton("Sign in");
         signIn.setBounds(270, 150, 100, 30);
         
-        logIn.addActionListener(e -> {
+        logIn.addActionListener(_ -> {
             String user = username.getText();
             String pass = new String(password.getPassword());
             boolean found = false;
@@ -53,7 +53,7 @@ public class Applicazione {
                 JOptionPane.showMessageDialog(frame, "Invalid username or password.");
         });
 
-        signIn.addActionListener(e -> {
+        signIn.addActionListener(_ -> {
             String user = username.getText();
             String pass = new String(password.getPassword());
             boolean exists = false;

@@ -1,4 +1,4 @@
-package Appl;
+package apps;
 
 public class Persona {
     private final String user;
