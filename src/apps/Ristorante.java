@@ -43,14 +43,14 @@ public class Ristorante {
 
         for(JCheckBox i : checkBox) {
             i.addActionListener(e -> {
-                somma(frame, textField, tf, checkBox, prezzi);
+                somma(textField, tf, checkBox, prezzi);
             });
         }
 
         frame.setVisible(true);
     }
 
-    public static void somma(JFrame frame, JTextField[] quatita, JTextField tf, JCheckBox[] checkBox, String[] prezzi) {
+    public static void somma(JTextField[] quatita, JTextField tf, JCheckBox[] checkBox, String[] prezzi) {
         double somma = 0;
         for (int i = 0; i < 7; i++) {
             if(checkBox[i].isSelected())
