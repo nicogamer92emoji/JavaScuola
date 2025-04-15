@@ -37,7 +37,7 @@ public class Applicazione {
         JButton signIn = new JButton("Sign in");
         signIn.setBounds(270, 150, 100, 30);
         
-        logIn.addActionListener(_ -> {
+        logIn.addActionListener(e -> {
             String user = username.getText();
             String pass = new String(password.getPassword());
             boolean found = false;
@@ -53,7 +53,7 @@ public class Applicazione {
                 JOptionPane.showMessageDialog(frame, "Invalid username or password.");
         });
 
-        signIn.addActionListener(_ -> {
+        signIn.addActionListener(e -> {
             String user = username.getText();
             String pass = new String(password.getPassword());
             boolean exists = false;

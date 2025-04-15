@@ -1,13 +1,9 @@
 package apps;
 
 import java.awt.GridLayout;
-import java.util.Random;
 import javax.swing.*;
 
-public class Ristorante extends Thread {
-    static JTextField[] textFields = new JTextField[10];
-    int somma = 0;
-    static JTextField totale;
+public class Ristorante {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -15,73 +11,51 @@ public class Ristorante extends Thread {
         frame.setLocationRelativeTo(null);
         
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(11, 3));
+        panel.setLayout(new GridLayout(10, 2));
         frame.add(panel);
 
-        String[] cibo = {"Pizza", "Pasta", "Insalata", "Carne", "Pesce", "Dolce", "Bevanda", "Antipasto", "Contorno", "Frutta"};
+        String[] piatti = {"Pizza", "Pasta", "Insalata", "Carne", "Pesce", "Dolce", "Bevanda"};
 
-        for (int i = 0; i < cibo.length; i++) {
-            JLabel label = new JLabel(cibo[i]);
-            label.setHorizontalAlignment(SwingConstants.RIGHT);
-            panel.add(label);
+        String[] prezzi = {"10.00", "8.00", "5.00", "15.00", "12.00", "4.00", "2.00"};
 
-            Random random = new Random();
-            JLabel prezzo = new JLabel(random.nextInt(10) + " €");
-            prezzo.setHorizontalAlignment(SwingConstants.CENTER);
-            panel.add(prezzo);
+        JCheckBox checkBox[] = new JCheckBox[7];
+        JTextField textField[] = new JTextField[7];
 
-            JTextField textField = new JTextField("Quantità", 2);
-            textField.setHorizontalAlignment(JTextField.CENTER);
-            textFields[i] = textField;
-            panel.add(textField);
+        JLabel cibo = new JLabel("Cibo", SwingConstants.CENTER);
+        JLabel prezzo = new JLabel("Quantità", SwingConstants.CENTER);
+        panel.add(cibo);
+        panel.add(prezzo);
+
+        for(int i = 0; i < 7; i++) {
+            checkBox[i] = new JCheckBox();
+            checkBox[i].setText(piatti[i] + " - " + prezzi[i] + "€");
+            panel.add(checkBox[i]);
+
+            textField[i] = new JTextField(10);
+            textField[i].setHorizontalAlignment(JTextField.CENTER);
+            panel.add(textField[i]);
         }
 
-        JLabel label = new JLabel("Totale");
-        label.setHorizontalAlignment(SwingConstants.RIGHT);
-        panel.add(label);
+        JTextField tf = new JTextField(" Totale ", 10);
+        tf.setHorizontalAlignment(JTextField.CENTER);
+        tf.setEditable(false);
+        panel.add(tf);
 
-        JLabel vuota = new JLabel(" ");
-        panel.add(vuota);
-        
-        totale = new JTextField("0", 2);
-        totale.setEditable(false);
-        totale.setHorizontalAlignment(JTextField.CENTER);
-        panel.add(totale);
-
-        Ristorante ristorante = new Ristorante();
-        ristorante.start();
-
-        
+        for(JCheckBox i : checkBox) {
+            i.addActionListener(e -> {
+                somma(frame, textField, tf, checkBox, prezzi);
+            });
+        }
 
         frame.setVisible(true);
     }
 
-    @Override
-    public void run() {
-        try {
-            for (int i = 0; i < 10; i++){
-                switch (textFields[i].getText()) {
-                    case "1" -> somma += Integer.parseInt(textFields[i].getText());
-                    case "2" -> somma += Integer.parseInt(textFields[i].getText()) * 2;
-                    case "3" -> somma += Integer.parseInt(textFields[i].getText()) * 3;
-                    case "4" -> somma += Integer.parseInt(textFields[i].getText()) * 4;
-                    case "5" -> somma += Integer.parseInt(textFields[i].getText()) * 5;
-                    default -> somma += 0;
-
-                }
-            }
-
-        totale.setText(String.valueOf(somma));
-
-        Thread.sleep(1000);
-        } catch (NumberFormatException e) {
-            System.out.println("Errore nella conversione del numero");
-        } catch (InterruptedException e) {
-            System.out.println("Thread interrotto");
-        } finally {
-            System.out.println("Somma totale: " + somma);
+    public static void somma(JFrame frame, JTextField[] quatita, JTextField tf, JCheckBox[] checkBox, String[] prezzi) {
+        double somma = 0;
+        for (int i = 0; i < 7; i++) {
+            if(checkBox[i].isSelected())
+                somma += Double.parseDouble(prezzi[i]) * Integer.parseInt(quatita[i].getText());
         }
+        tf.setText(String.valueOf(somma) + "€");
     }
-
-    
 }
