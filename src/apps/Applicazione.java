@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class Applicazione {
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
         ArrayList<Persona> utenti = new ArrayList<>();
         utenti.add(new Persona("admin", "admin"));

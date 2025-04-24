@@ -1,6 +1,7 @@
 import javax.swing.*;
 
 public class CalcInterfaccia {
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
         JFrame frame = new JFrame("Calcolatrice");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
