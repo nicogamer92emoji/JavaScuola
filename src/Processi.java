@@ -12,5 +12,4 @@ public class Processi implements Runnable {
         for (int i = 0; i < 10; i++) 
             System.out.println("Main " + i);
     }
-
 }
