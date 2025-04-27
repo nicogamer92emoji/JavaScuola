@@ -1,5 +1,8 @@
 import javax.swing.*;
 public class ConvertFrame {
+
+
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
         JFrame frame = new JFrame("Convertitore");
         JPanel celsius = new JPanel();
