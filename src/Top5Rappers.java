@@ -41,7 +41,7 @@ public class Top5Rappers {
         panel.add(scrollPane);
         scrollPane.setBounds(10, 80, 570, 350);
 
-        aggiungi.addActionListener(_ -> {
+        aggiungi.addActionListener(e -> {
             String text = textField.getText();
             if(!text.isEmpty()) {
                 lista.add(text);
@@ -52,7 +52,7 @@ public class Top5Rappers {
             }
         });
 
-        elimina.addActionListener(_ -> {
+        elimina.addActionListener(e -> {
             String text = textField.getText();
             boolean trovato = false;
             for(int i = 0; i< lista.size(); i++) {
@@ -73,7 +73,7 @@ public class Top5Rappers {
             }
         });
 
-        completa.addActionListener(_ -> {
+        completa.addActionListener(e -> {
             String text = textField.getText();
             boolean trovato = false;
             for (int i = 0; i < lista.size(); i++) {

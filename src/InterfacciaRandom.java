@@ -12,8 +12,8 @@ public class InterfacciaRandom {
 
         JButton button = new JButton("Premi");
 
-        button.addActionListener(_ -> {
-            Timer timer = new Timer(10, _ -> {
+        button.addActionListener(e -> {
+            Timer timer = new Timer(10, er -> {
                 JLabel l = new JLabel("a");
                 panel.add(l);
                 panel.revalidate();
