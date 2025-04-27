@@ -2,7 +2,6 @@ import javax.swing.*;
 public class ConvertFrame {
 
 
-    @SuppressWarnings("unused")
     public static void main(String[] args) {
         JFrame frame = new JFrame("Convertitore");
         JPanel celsius = new JPanel();
@@ -16,7 +15,7 @@ public class ConvertFrame {
             try {
                 double celsiusValue = Double.parseDouble(txtCelsius.getText());
                 kelvinLabel.setText("Kelvin: " + (celsiusValue + 273.15));
-            } catch (Exception ex) {
+            } catch (NumberFormatException ex) {
                 System.out.println("errore!");
             }
         });
@@ -26,7 +25,7 @@ public class ConvertFrame {
             try {
                 double kelvinValue = Double.parseDouble(txtKelvin.getText());
                 celsiusLabel.setText("Celsius: " + (kelvinValue - 273.15));
-            } catch (Exception ex) {
+            } catch (NumberFormatException ex) {
                 System.out.println("errore!");
             }
         });

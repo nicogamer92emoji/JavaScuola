@@ -5,9 +5,9 @@ import javax.swing.*;
 public class AcasoAsh {
     public static class SnakeGame extends JPanel implements ActionListener {
         private final int TILE_SIZE = 20;
-        private final int WIDTH = 400;
-        private final int HEIGHT = 400;
-        private final int ALL_TILES = (WIDTH * HEIGHT) / (TILE_SIZE * TILE_SIZE);
+        private final int GAME_WIDTH = 400;
+        private final int GAME_HEIGHT = 400;
+        private final int ALL_TILES = (GAME_WIDTH * GAME_HEIGHT) / (TILE_SIZE * TILE_SIZE);
         private final int DELAY = 150;
 
         private final int[] x = new int[ALL_TILES];
@@ -24,7 +24,7 @@ public class AcasoAsh {
         private Timer timer;
 
         public SnakeGame() {
-            setPreferredSize(new Dimension(WIDTH, HEIGHT));
+            setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
             setBackground(Color.BLACK);
             setFocusable(true);
             addKeyListener(new KeyAdapter() {
@@ -57,8 +57,8 @@ public class AcasoAsh {
         }
 
         private void spawnApple() {
-            appleX = (int) (Math.random() * (WIDTH / TILE_SIZE)) * TILE_SIZE;
-            appleY = (int) (Math.random() * (HEIGHT / TILE_SIZE)) * TILE_SIZE;
+            appleX = (int) (Math.random() * (GAME_WIDTH / TILE_SIZE)) * TILE_SIZE;
+            appleY = (int) (Math.random() * (GAME_HEIGHT / TILE_SIZE)) * TILE_SIZE;
         }
 
         private void move() {
@@ -90,7 +90,7 @@ public class AcasoAsh {
                 }
             }
 
-            if (x[0] < 0 || x[0] >= WIDTH || y[0] < 0 || y[0] >= HEIGHT) {
+            if (x[0] < 0 || x[0] >= GAME_WIDTH || y[0] < 0 || y[0] >= GAME_HEIGHT) {
                 running = false;
             }
 
@@ -141,8 +141,8 @@ public class AcasoAsh {
             g.setFont(new Font("Arial", Font.BOLD, 20));
             FontMetrics metrics = getFontMetrics(g.getFont());
 
-            g.drawString(message, (WIDTH - metrics.stringWidth(message)) / 2, HEIGHT / 2 - 20);
-            g.drawString(scoreMessage, (WIDTH - metrics.stringWidth(scoreMessage)) / 2, HEIGHT / 2 + 20);
+            g.drawString(message, (GAME_WIDTH - metrics.stringWidth(message)) / 2, GAME_HEIGHT / 2 - 20);
+            g.drawString(scoreMessage, (GAME_WIDTH - metrics.stringWidth(scoreMessage)) / 2, GAME_HEIGHT / 2 + 20);
         }
 
         public static void main(String[] args) {
@@ -154,6 +154,14 @@ public class AcasoAsh {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
+        }
+
+        public int getWIDTH() {
+            return WIDTH;
+        }
+
+        public int getHEIGHT() {
+            return HEIGHT;
         }
     }
 }
