@@ -1,6 +1,7 @@
 import javax.swing.*;
 
 public class InterfacciaRandom {
+    @SuppressWarnings("unused")
     public static void main(String[] args) throws InterruptedException {
         JFrame frame = new JFrame("Spammer");
         JPanel panel = new JPanel();

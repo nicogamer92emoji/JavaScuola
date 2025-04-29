@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class Top5Rappers {
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
         ArrayList<String> lista = new ArrayList<>();
 

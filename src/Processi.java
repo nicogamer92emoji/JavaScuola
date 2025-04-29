@@ -9,7 +9,7 @@ public class Processi implements Runnable {
         Processi p = new Processi();
 
         p.run();
-        for (int i = 0; i < 10; i++) 
+        for (int i = 0; i < 10; i++)
             System.out.println("Main " + i);
     }
 }
