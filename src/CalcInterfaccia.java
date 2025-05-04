@@ -48,6 +48,16 @@ public class CalcInterfaccia {
         calcolaButton.setBounds(280, 30, 100, 25);
         panel.add(calcolaButton);
 
+        JButton azzera = new JButton("Azzera");
+        azzera.setBounds(280, 70, 100, 25);
+        panel.add(azzera);
+
+        azzera.addActionListener(e -> {
+            textField1.setText("");
+            textField2.setText("");
+            uguale.setText("=");
+        });
+
         calcolaButton.addActionListener(e -> {
                 double num1 = Double.parseDouble(textField1.getText());
                 double num2 = Double.parseDouble(textField2.getText());
