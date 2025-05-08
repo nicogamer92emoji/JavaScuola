@@ -8,7 +8,8 @@ public class Processi implements Runnable {
     public static void main(String[] args) {
         Processi p = new Processi();
 
-        p.run();
+        Thread t = new Thread(p);
+        t.start();
         for (int i = 0; i < 10; i++)
             System.out.println("Main " + i);
     }
