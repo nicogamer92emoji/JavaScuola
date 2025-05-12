@@ -1,130 +1,153 @@
-// acqua al litro $0,0024
-
 import java.awt.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.*;
 
 public class CalcolaBolletta {
-    @SuppressWarnings("unused")
-    public static void main(String[] args) {
-        final double acqua = 0.0024;
-        final double energia = 0.0905;
-        final double gas = 0.402365;
 
-        JFrame[] frames = new JFrame[4];
-        for(int i = 0; i<3; i++) {
-            frames[i] = new JFrame();
-            frames[i].setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frames[i].setSize(300, 200);
-            frames[i].setLocation(i==0 ? 300 : (i+1)*300, 350);
-            frames[i].setResizable(false);
-        }
-        frames[3] = new JFrame("Pulsante");
-        frames[3].setLocation(700, 600);
-        frames[3].setSize(170, 110);
-        frames[3].setLayout(new FlowLayout(FlowLayout.CENTER));
-        frames[3].setResizable(false);
+    public static void main(String[] args) {
+        final double COSTO_ACQUA = 1.5;
+        final double COSTO_ENERGIA = 0.25;
+        final double COSTO_GAS = 0.95;
+
+        AtomicInteger step = new AtomicInteger(0);
+        JFrame frame = new JFrame("Calcola Bolletta - 30 giorni");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 450);
+        frame.setLayout(new BorderLayout());
+        frame.setLocationRelativeTo(null);
+
+        JPanel centerPanel = new JPanel(new GridLayout(0, 2));
+        JPanel buttonPanel = new JPanel(new FlowLayout());
 
         JButton prossimo = new JButton("Prossimo");
-        frames[3].add(prossimo);
         JButton calcola = new JButton("Calcola");
-        frames[3].add(calcola);
+        JButton salvaCommento = new JButton("Salva commento");
 
-        frames[0].setTitle("Consumi");
-        frames[1].setTitle("Input");
-        frames[2].setTitle("Bolletta");
+        buttonPanel.add(prossimo);
+        buttonPanel.add(calcola);
+        buttonPanel.add(salvaCommento);
 
-        frames[0].setLayout(new GridLayout(4, 2));
-        frames[0].add(new JLabel("Oggetto", JLabel.CENTER));
-        frames[0].add(new JLabel("Consumo", JLabel.CENTER));
-        frames[0].add(new JLabel("Rubinetto", JLabel.CENTER));
-        frames[0].add(new JLabel("6 L/m", JLabel.CENTER));
-        frames[0].add(new JLabel("Doccia", JLabel.CENTER));
-        frames[0].add(new JLabel("12 L/m", JLabel.CENTER));
-        frames[0].add(new JLabel("Sciacquone", JLabel.CENTER));
-        frames[0].add(new JLabel("24 L", JLabel.CENTER));
+        frame.add(centerPanel, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
 
-        frames[1].setLayout(new GridLayout(4, 2));
-        frames[1].add(new JLabel("Oggetto", JLabel.CENTER));
-        frames[1].add(new JLabel("Tempo usato in minuti", JLabel.CENTER));
-        frames[1].add(new JLabel("Rubinetto", JLabel.CENTER));
+        // TextArea per il commento
+        JTextArea commentoArea = new JTextArea(5, 40);
+        JScrollPane scrollPane = new JScrollPane(commentoArea);
+        frame.add(scrollPane, BorderLayout.NORTH);
+        commentoArea.setBorder(BorderFactory.createTitledBorder("Scrivi un commento su come migliorare il consumo"));
+
+        // Campi input
         JTextField rubinetto = new JTextField();
-        frames[1].add(rubinetto);
-        frames[1].add(new JLabel("Doccia", JLabel.CENTER));
         JTextField doccia = new JTextField();
-        frames[1].add(doccia);
-        frames[1].add(new JLabel("num sciacquoni usati", JLabel.CENTER));
-        JTextField sciacquioni = new JTextField();
-        frames[1].add(sciacquioni);
+        JTextField sciacquoni = new JTextField();
+        JTextField phon = new JTextField();
+        JTextField forno = new JTextField();
+        JTextField frigo = new JTextField();
+        JTextField condizionatore = new JTextField();
+        JTextField microonde = new JTextField();
+        JTextField caldaiaGas = new JTextField();
 
-        java.util.concurrent.atomic.AtomicInteger a = new java.util.concurrent.atomic.AtomicInteger(0);
+        Runnable aggiornaSchermata = () -> {
+            centerPanel.removeAll();
+            switch (step.get()) {
+                case 0 -> {
+                    centerPanel.add(new JLabel("Rubinetto (minuti totali al mese):"));
+                    centerPanel.add(rubinetto);
+                    centerPanel.add(new JLabel("Doccia (minuti totali al mese):"));
+                    centerPanel.add(doccia);
+                    centerPanel.add(new JLabel("Sciacquoni usati (n°):"));
+                    centerPanel.add(sciacquoni);
+                }
+                case 1 -> {
+                    centerPanel.add(new JLabel("Phon (minuti totali al mese):"));
+                    centerPanel.add(phon);
+                    centerPanel.add(new JLabel("Frigo (1 se usato, 0 se no):"));
+                    centerPanel.add(frigo);
+                    centerPanel.add(new JLabel("Condizionatore (minuti totali al mese):"));
+                    centerPanel.add(condizionatore);
+                    centerPanel.add(new JLabel("Forno (minuti totali al mese):"));
+                    centerPanel.add(forno);
+                    centerPanel.add(new JLabel("Microonde (minuti totali al mese):"));
+                    centerPanel.add(microonde);
+                }
+                case 2 -> {
+                    centerPanel.add(new JLabel("Gas consumato (smc):"));
+                    centerPanel.add(caldaiaGas);
+                }
+                default -> {
+                    centerPanel.add(new JLabel("Tutti i dati sono stati inseriti."));
+                }
+            }
+            centerPanel.revalidate();
+            centerPanel.repaint();
+        };
 
-        prossimo.addActionListener(e -> {
+        calcola.addActionListener(e -> {
             try {
-                switch (a.get()) {
+                switch (step.get()) {
+                    case 0 -> {
+                        double minRub = Double.parseDouble(rubinetto.getText());
+                        double minDoccia = Double.parseDouble(doccia.getText());
+                        double nSciacquoni = Double.parseDouble(sciacquoni.getText());
+
+                        double litriTotali = (minRub * 6) + (minDoccia * 12) + (nSciacquoni * 18);
+                        double metriCubici = litriTotali / 1000.0;
+                        double costoAcqua = metriCubici * COSTO_ACQUA;
+
+                        JOptionPane.showMessageDialog(frame, String.format("Costo acqua: %.2f € (%.2f m³)", costoAcqua, metriCubici));
+                    }
                     case 1 -> {
-                        frames[0].getContentPane().removeAll();
-                        frames[0].setLayout(new GridLayout(5, 2));
-                        frames[0].add(new JLabel("Oggetto", JLabel.CENTER));
-                        frames[0].add(new JLabel("Consumo", JLabel.CENTER));
-                        frames[0].add(new JLabel("Phon", JLabel.CENTER));
-                        frames[0].add(new JLabel("2000 W", JLabel.CENTER));
-                        frames[0].add(new JLabel("Frigo", JLabel.CENTER));
-                        frames[0].add(new JLabel("40 W", JLabel.CENTER));
-                        frames[0].add(new JLabel("Condizionatore", JLabel.CENTER));
-                        frames[0].add(new JLabel("3000 W", JLabel.CENTER));
-                        frames[0].add(new JLabel("Microonde", JLabel.CENTER));
-                        frames[0].add(new JLabel("100 W", JLabel.CENTER));
-                        frames[0].getContentPane().revalidate();
-                        frames[0].getContentPane().repaint();
-                        frames[1].getContentPane().removeAll();
-                        frames[1].setLayout(new GridLayout(5, 2));
-                        frames[1].add(new JLabel("Oggetto", JLabel.CENTER));
-                        frames[1].add(new JLabel("Tempo usato in minuti", JLabel.CENTER));
-                        frames[1].add(new JLabel("Phon", JLabel.CENTER));
-                        JTextField phon = new JTextField();
-                        frames[1].add(phon);
-                        frames[1].add(new JLabel("Frigo", JLabel.CENTER));
-                        JTextField frigo = new JTextField();
-                        frames[1].add(frigo);
-                        frames[1].add(new JLabel("Condizionatore", JLabel.CENTER));
-                        JTextField condizionatore = new JTextField();
-                        frames[1].add(condizionatore);
-                        frames[1].add(new JLabel("Microonde", JLabel.CENTER));
-                        JTextField microonde = new JTextField();
-                        frames[1].add(microonde);
-                        frames[1].getContentPane().revalidate();
-                        frames[1].getContentPane().repaint();
-                        a.incrementAndGet();
+                        double minPhon = Double.parseDouble(phon.getText()) / 60.0;
+                        double usaFrigo = Double.parseDouble(frigo.getText());
+                        double minCond = Double.parseDouble(condizionatore.getText()) / 60.0;
+                        double minForno = Double.parseDouble(forno.getText()) / 60.0;
+                        double minMicr = Double.parseDouble(microonde.getText()) / 60.0;
+
+                        double kWhTot = (2 * minPhon) +
+                                (usaFrigo == 1 ? 30 : 0) +
+                                (3 * minCond) +
+                                (1.2 * minForno) +
+                                (0.1 * minMicr);
+
+                        double costoEnergia = kWhTot * COSTO_ENERGIA;
+
+                        JOptionPane.showMessageDialog(frame, String.format("Consumo: %.2f kWh\nCosto energia: %.2f €", kWhTot, costoEnergia));
                     }
                     case 2 -> {
-                        frames[0].getContentPane().removeAll();
-                        frames[0].setLayout(new GridLayout(4, 2));
-                        frames[0].add(new JLabel("Oggetto", JLabel.CENTER));
-                        frames[0].add(new JLabel("Consumo", JLabel.CENTER));
-                        frames[0].add(new JLabel("Gas", JLabel.CENTER));
-                        frames[0].add(new JLabel("1 smc", JLabel.CENTER));
-                        frames[0].getContentPane().revalidate();
-                        frames[0].getContentPane().repaint();
-                        frames[1].getContentPane().removeAll();
-                        frames[1].setLayout(new GridLayout(4, 2));
-                        frames[1].add(new JLabel("Oggetto", JLabel.CENTER));
-                        frames[1].add(new JLabel("Tempo usato in minuti", JLabel.CENTER));
-                        JTextField usoGas = new JTextField();
-                        frames[1].add(usoGas);
-                        frames[1].getContentPane().revalidate();
-                        frames[1].getContentPane().repaint();
-                        a.incrementAndGet();
+                        double smc = Double.parseDouble(caldaiaGas.getText());
+                        double costoGas = smc * COSTO_GAS;
+
+                        JOptionPane.showMessageDialog(frame, String.format("Gas usato: %.2f smc\nCosto gas: %.2f €", smc, costoGas));
                     }
-                    default -> System.out.println("Non ci sono più oggetti da calcolare");
+                    default -> JOptionPane.showMessageDialog(frame, "Tutti i calcoli sono stati completati.");
                 }
-            } catch (Exception er) {
-                System.out.println(er);
+            } catch (HeadlessException | NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame, "Errore: " + ex.getMessage());
             }
         });
 
+        prossimo.addActionListener(e -> {
+            if (step.get() < 3) {
+                step.incrementAndGet();
+                aggiornaSchermata.run();
+            } else {
+                JOptionPane.showMessageDialog(frame, "Non ci sono altri passaggi.");
+            }
+        });
 
-        for(JFrame f : frames) {
-            f.setVisible(true);
-        }
+        salvaCommento.addActionListener(e -> {
+            String commento = commentoArea.getText();
+            try (FileWriter fw = new FileWriter("commento_consumi.txt")) {
+                fw.write(commento);
+                JOptionPane.showMessageDialog(frame, "Commento salvato con successo!");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(frame, "Errore durante il salvataggio: " + ex.getMessage());
+            }
+        });
+
+        aggiornaSchermata.run();
+        frame.setVisible(true);
     }
 }
