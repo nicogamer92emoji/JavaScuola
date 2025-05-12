@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class FluidoCalc {
-    @SuppressWarnings("UseSpecificCatch")
+    @SuppressWarnings({ "UseSpecificCatch", "unused" })
     public static void main(String[] args) {
         ArrayList<Esperimento> esperimenti = new ArrayList<>();
 
