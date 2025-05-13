@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.*;
 
 public class CalcolaBolletta {
-
     @SuppressWarnings("unused")
     public static void main(String[] args) {
         final double COSTO_ACQUA = 1.5;
