@@ -6,6 +6,7 @@ import javax.swing.*;
 
 public class CalcolaBolletta {
 
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
         final double COSTO_ACQUA = 1.5;
         final double COSTO_ENERGIA = 0.25;
